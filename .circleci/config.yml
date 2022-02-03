@@ -7,19 +7,19 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: echo "this is the build job"
+      - run: npm run lint
   test:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: echo "this is the test job"
+      - run: npm run test
   analyze:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: echo "this is the analyze job"
+      - run: npm audit
 
 
 # Orchestrate our job run sequence
@@ -27,5 +27,9 @@ workflows:
   ci:
     jobs:
       - build
-      - test
-      - analyze
+      - test:
+          requires:
+            - build
+      - analyze:
+          requires:
+            - test
